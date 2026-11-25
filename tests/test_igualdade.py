@@ -1,4 +1,4 @@
-"""Caso A6 (previsão do script = previsão da interface). Dono: Integrante 5."""
+"""Caso A5 (roteiro do script = roteiro da interface). Dono: Integrante 5."""
 import pytest
 
 pytestmark = pytest.mark.skip(reason="a implementar - ver BACKLOG.md")

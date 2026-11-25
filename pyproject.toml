@@ -3,9 +3,9 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "energia"
+name = "roteiro"
 version = "0.1.0"
-description = "Previsão do consumo diário de energia (Questão 6 - IA UFC Crateús)"
+description = "Otimizador de roteiros turísticos em Fortaleza (Questão 2 - IA UFC Crateús)"
 requires-python = ">=3.11"
 
 [tool.setuptools.packages.find]

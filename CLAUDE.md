@@ -4,27 +4,29 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Current state
 
-The repository has no code yet. It contains only `_IA__Trabalho_Final.pdf`, the assignment for the final AI project at UFC Campus Crateús (Prof. Wellington Franco). The team has 5 students and must pick **one** of ten project options. **The team chose option 6 (next-day household energy forecast on UCI Individual Household Electric Power Consumption).** See pages 10–11 of the PDF. The team plan is in `PLANEJAMENTO.md` and the definition of the final delivery is in `ENTREGA_FINAL.md`. Treat both as the source of truth for roles, module boundaries and the checklist. Once code exists, update this file with the stack, commands and architecture.
+The repository contains the team plan and a code skeleton (stubs raising `NotImplementedError`) for the final AI project at UFC Campus Crateús (Prof. Wellington Franco). The assignment is `_IA__Trabalho_Final.pdf` (git-ignored). The team has 5 students and must pick **one** of ten options. **The team chose option 2 (tourist itinerary optimizer on OSM POIs in Fortaleza), switching from option 6 on 25/11/2026.** See pages 4–5 of the PDF. The team plan is in `PLANEJAMENTO.md`, the per-member backlog in `BACKLOG.md` and the definition of the final delivery in `ENTREGA_FINAL.md`. Treat all three as the source of truth for roles, module boundaries and the checklist. The branches `dados/D1-download` and `dados/D2-D6-serie-diaria` belong to option 6 and are obsolete.
 
-Key dates: presentation on **05/12/2026** (15 min + 5 min of questions, with a live demo). Send the repo link before then, suggested by 04/12/2026 23:59 (Fortaleza time). Create the tag `entrega-05-12-2026` on the evaluated commit and never move it.
+Key dates: presentation on **05/12/2026** (15 min + 5 min of questions, with a live demo). Send the repo link before then, suggested by 04/12/2026 23:59 (Fortaleza time). Method parameters freeze on 01/12, code on 02/12. Create the tag `entrega-05-12-2026` on the evaluated commit and never move it.
 
-## Repository and workflow (option 6)
+## Repository and workflow (option 2)
 
-Remote: https://github.com/marlonmelo12/ia_final. Python package `energia` with a src layout (`src/energia/`), a Streamlit UI in `app/app.py`, pipeline scripts in `scripts/` and pytest tests in `tests/`.
+Remote: https://github.com/marlonmelo12/ia_final. Python package `roteiro` with a src layout (`src/roteiro/`), a Streamlit UI with a pydeck map in `app/app.py`, pipeline scripts in `scripts/` and pytest tests in `tests/`.
 
 ```bash
 pip install -r requirements.txt && pip install -e .
-python scripts/baixar_dados.py && python scripts/preparar_dados.py && python scripts/treinar.py
-python scripts/experimentos.py          # final test-set evaluation; do not run before the 02/12 freeze
+python scripts/baixar_dados.py          # OSMnx -> data/raw/pois_osm.geojson -> data/pois.csv (20 POIs)
+python scripts/experimentos.py          # final experiment, seeds 0-4; do not run before the 02/12 freeze
 streamlit run app/app.py
 pytest                                   # all tests
-pytest tests/test_sem_futuro.py::test_x  # single test
+pytest tests/test_problema.py::test_x   # single test
 ```
 
-- `src/energia/contratos.py` holds the shared contract: paths, column schemas, split dates, seed and exceptions. Every module imports from it. Do not change it without a `CONTRATO:` PR approved by all five members.
-- Each file has one owner (`BACKLOG.md`, `.github/CODEOWNERS`). Work on branches named `<papel>/<ID>-desc`, rebase on `main`, and integrate by PR with squash merge. `main` is protected. Details are in `CONTRIBUTING.md`.
-- `previsao.prever()` is the single prediction path, used by both the scripts and the UI (acceptance case A6).
-- Raw and processed data and `.joblib` models are git-ignored. Only `data/amostra/` is versioned.
+- `src/roteiro/contratos.py` holds the shared contract: paths, the assignment's constants (30 min visit, 4 km/h, budgets 120/180/240, 20 POIs), column schemas, seeds, the evaluation limit, declared parameters and exceptions. Every module imports from it. Do not change it without a `CONTRATO:` PR approved by all five members.
+- Model: a route is an ordered list of `osm_id` without repetition, starting and ending at the user's point. Time = haversine legs at 4 km/h (including the return) + 30 min per visit. Utility = sum of category preferences (1–5). `problema.Avaliador` counts every objective evaluation so hill climbing and simulated annealing share the same `MAX_AVALIACOES`.
+- Parameter tuning uses only seeds 100–104 (`SEMENTES_AJUSTE`); seeds 0–4 are reserved for the final experiment.
+- Each file has one owner (`BACKLOG.md`, `.github/CODEOWNERS`). Work on branches named `<papel>/<ID>-desc` (`dados`, `problema`, `busca`, `interface`, `qualidade`, `docs`, `fix`), rebase on `main`, and integrate by PR with squash merge. `main` is protected. Details are in `CONTRIBUTING.md`.
+- `otimizar.otimizar()` is the single execution path, used by both the experiment script and the UI (acceptance case A5). An insufficient budget returns an empty route with an explanation, not an exception.
+- `data/pois.csv` and `data/cenarios.csv` are small and versioned so the demo runs offline. Raw OSM data (`data/raw/`), the OSMnx `cache/` and `execucoes.db` are git-ignored.
 
 ## The ten options (each names a required external dataset)
 

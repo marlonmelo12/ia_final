@@ -1,5 +1,5 @@
 ## Item do backlog
-<!-- Ex.: D3 — agregação diária -->
+<!-- Ex.: P5 — vizinhança -->
 
 ## O que mudou
 
@@ -10,6 +10,6 @@
 - [ ] Só alterei arquivos do meu papel (ou o dono aprovou)
 - [ ] Fiz rebase na `main` atualizada
 - [ ] `pytest` passa localmente
-- [ ] Não usei dados do teste (jul-dez/2009) para ajustar ou escolher nada
-- [ ] Não adicionei dados grandes, modelos `.joblib` nem segredos
+- [ ] Não usei as sementes 0 a 4 para ajustar parâmetros (ajuste só com 100 a 104)
+- [ ] Não adicionei dados brutos grandes, bancos `.db` nem segredos
 - [ ] Atualizei a documentação do meu módulo (se aplicável)

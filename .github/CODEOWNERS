@@ -1,34 +1,36 @@
 # Cada caminho tem um dono, que é chamado automaticamente para revisar.
 # SUBSTITUA os marcadores pelos usuários reais do GitHub de cada integrante.
-# INTEGRANTE_1 = Dados | 2 = Atributos | 3 = Modelos | 4 = Interface | 5 = Qualidade
+# INTEGRANTE_1 = Dados | 2 = Modelo do problema | 3 = Busca local | 4 = Interface | 5 = Qualidade
 
-*                               @INTEGRANTE_5
+*                                     @INTEGRANTE_5
 
-/src/energia/dados.py           @INTEGRANTE_1
-/scripts/baixar_dados.py        @INTEGRANTE_1
-/tests/test_agregacao.py        @INTEGRANTE_1
-/DADOS.md                       @INTEGRANTE_1
-/data/amostra/                  @INTEGRANTE_1
-/relatorio/secoes/01_dados.md   @INTEGRANTE_1
+/src/roteiro/dados.py                 @INTEGRANTE_1
+/scripts/baixar_dados.py              @INTEGRANTE_1
+/tests/test_dados.py                  @INTEGRANTE_1
+/DADOS.md                             @INTEGRANTE_1
+/data/pois.csv                        @INTEGRANTE_1
+/relatorio/secoes/01_dados.md         @INTEGRANTE_1
 
-/src/energia/atributos.py       @INTEGRANTE_2
-/scripts/preparar_dados.py      @INTEGRANTE_2
-/tests/test_sem_futuro.py       @INTEGRANTE_2
-/tests/test_divisao.py          @INTEGRANTE_2
-/relatorio/secoes/02_representacao.md @INTEGRANTE_2
+/src/roteiro/problema.py              @INTEGRANTE_2
+/src/roteiro/vizinhanca.py            @INTEGRANTE_2
+/src/roteiro/guloso.py                @INTEGRANTE_2
+/data/cenarios.csv                    @INTEGRANTE_2
+/tests/test_problema.py               @INTEGRANTE_2
+/tests/test_vizinhanca.py             @INTEGRANTE_2
+/relatorio/secoes/02_modelo.md        @INTEGRANTE_2
 
-/src/energia/modelos.py         @INTEGRANTE_3
-/src/energia/avaliacao.py       @INTEGRANTE_3
-/scripts/treinar.py             @INTEGRANTE_3
-/scripts/experimentos.py        @INTEGRANTE_3
-/resultados/                    @INTEGRANTE_3
-/relatorio/secoes/03_resultados.md @INTEGRANTE_3
+/src/roteiro/subida_encosta.py        @INTEGRANTE_3
+/src/roteiro/tempera.py               @INTEGRANTE_3
+/scripts/experimentos.py              @INTEGRANTE_3
+/tests/test_metodos.py                @INTEGRANTE_3
+/resultados/                          @INTEGRANTE_3
+/relatorio/secoes/03_metodos_resultados.md @INTEGRANTE_3
 
-/app/                           @INTEGRANTE_4
-/src/energia/previsao.py        @INTEGRANTE_4
-/tests/test_previsao.py         @INTEGRANTE_4
-/relatorio/secoes/04_interface.md @INTEGRANTE_4
-/relatorio/capturas/            @INTEGRANTE_4
+/app/                                 @INTEGRANTE_4
+/src/roteiro/otimizar.py              @INTEGRANTE_4
+/tests/test_otimizar.py               @INTEGRANTE_4
+/relatorio/secoes/04_interface.md     @INTEGRANTE_4
+/relatorio/capturas/                  @INTEGRANTE_4
 
 # Contrato compartilhado: mudanças precisam de todos
-/src/energia/contratos.py       @INTEGRANTE_1 @INTEGRANTE_2 @INTEGRANTE_3 @INTEGRANTE_4 @INTEGRANTE_5
+/src/roteiro/contratos.py             @INTEGRANTE_1 @INTEGRANTE_2 @INTEGRANTE_3 @INTEGRANTE_4 @INTEGRANTE_5
