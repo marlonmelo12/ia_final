@@ -5,7 +5,7 @@ Dono: Integrante 5. Ver BACKLOG.md.
 
 
 def salvar_execucao(entrada: dict, parametros: dict, resultado: dict) -> int:
-    """Grava uma execução e retorna seu id."""
+    """Grava cenário, método, semente, parâmetros e resultado (roteiro incluso) e retorna o id."""
     raise NotImplementedError
 
 

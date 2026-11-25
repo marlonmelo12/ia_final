@@ -8,11 +8,10 @@ venv/
 
 # Dados e artefatos grandes (obtidos por script)
 data/raw/*
-data/processed/*
 !data/raw/.gitkeep
-!data/processed/.gitkeep
+data/processed/
+cache/
 *.zip
-models/*.joblib
 execucoes.db
 *.sqlite
 

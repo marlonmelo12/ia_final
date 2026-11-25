@@ -1,4 +1,4 @@
-"""Caso A5 (histórico insuficiente). Dono: Integrante 4."""
+"""Caso A1 (nenhum local repetido). Dono: Integrante 2."""
 import pytest
 
 pytestmark = pytest.mark.skip(reason="a implementar - ver BACKLOG.md")
