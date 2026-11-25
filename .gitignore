@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+
+# Dados e artefatos grandes (obtidos por script)
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+*.zip
+models/*.joblib
+execucoes.db
+*.sqlite
+
+# Notebooks: checkpoints
+.ipynb_checkpoints/
+
+# Editor / SO
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Segredos e configuração local
+.env
+.claude/settings.local.json
+
+# Enunciado (não redistribuir)
+_IA__Trabalho_Final.pdf
