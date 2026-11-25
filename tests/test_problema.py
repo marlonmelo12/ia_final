@@ -125,6 +125,43 @@ def test_osm_id_repetido_nos_pois_e_entrada_invalida():
         Avaliador(POIS + [POIS[0]], Cenario(0.0, 0.0, 240.0, PREFS))
 
 
+# --- P4: orçamento insuficiente (caso A3) ---------------------------------
+# A e D ficam a 1 perna da partida: o menor roteiro possível é 2 pernas + 1 visita.
+MINIMO_MIN = 2 * PERNA_MIN + DURACAO_VISITA_MIN  # ≈ 63,36 min
+
+
+def test_a3_orcamento_insuficiente_explica_local_e_falta():
+    av = avaliador(orcamento=30.0)
+    diag = av.diagnosticar_orcamento()
+    assert diag["osm_id"] == "A"  # empata com D; vale a ordem do pois.csv
+    assert diag["nome"] == "Museu A"
+    assert diag["tempo_minimo_min"] == pytest.approx(MINIMO_MIN, abs=1e-6)
+    assert diag["falta_min"] == pytest.approx(MINIMO_MIN - 30.0, abs=1e-6)
+    assert "Museu A" in diag["mensagem"] and "Faltam 33.4 min" in diag["mensagem"]
+
+
+def test_a3_nenhum_roteiro_nao_vazio_e_viavel():
+    av = avaliador(orcamento=30.0)
+    assert av.diagnosticar_orcamento() is not None
+    assert not any(av.avaliar([o])[2] for o in av.locais)
+
+
+def test_orcamento_exato_do_local_mais_proximo_nao_e_insuficiente():
+    assert avaliador(orcamento=MINIMO_MIN).diagnosticar_orcamento() is None
+    assert avaliador(orcamento=MINIMO_MIN - 1e-6).diagnosticar_orcamento() is not None
+
+
+def test_diagnostico_nao_conta_avaliacoes():
+    av = avaliador(orcamento=30.0)
+    av.diagnosticar_orcamento()
+    assert av.avaliacoes == 0
+
+
+def test_sem_locais_e_entrada_invalida():
+    with pytest.raises(EntradaInvalida):
+        Avaliador([], Cenario(0.0, 0.0, 240.0, PREFS)).diagnosticar_orcamento()
+
+
 def test_aceita_dataframe_do_pois_csv():
     pd = pytest.importorskip("pandas")
     av = Avaliador(pd.DataFrame(POIS), Cenario(0.0, 0.0, 240.0, PREFS))
