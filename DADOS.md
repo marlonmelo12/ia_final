@@ -8,12 +8,12 @@
 | Responsável | OpenStreetMap Foundation e colaboradores do OpenStreetMap |
 | URL / acesso | `osmnx.features_from_place("Fortaleza, Ceará, Brazil", tags)` — https://osmnx.readthedocs.io/en/stable/user-reference.html (seção *features*) |
 | Tags consultadas | `tourism=attraction`, `tourism=museum`, `leisure=park` |
-| Data de acesso | |
+| Data de acesso | 26/11/2026 16:14 (horário de Fortaleza, UTC-3) |
 | Licença / condições de uso | Open Database License (ODbL) 1.0 — atribuição: "© OpenStreetMap contributors", https://www.openstreetmap.org/copyright |
-| Versão do OSMnx | |
-| Arquivo bruto | `data/raw/pois_osm.geojson` (fora do Git) e o SHA-256 dele |
+| Versão do OSMnx | 2.2.0 (Python 3.15.2, geopandas 1.2.0, shapely 2.2.0) |
+| Arquivo bruto | `data/raw/pois_osm.geojson` (fora do Git), SHA-256 `45079035c73ea1c4dcc1000c4a8f4871829a73f9e60cdbbc41abc502a5a6c1e2`. O OSM muda com o tempo, então uma consulta em outra data pode gerar outro hash. |
 | Arquivo utilizado | `data/pois.csv` (versionado), com SHA-256 |
-| Elementos retornados (total e por categoria e tipo de geometria) | |
+| Elementos retornados (total e por categoria e tipo de geometria) | 651 no total: 31 com `tourism` e 622 com `leisure`, sendo 616 Polygon, 18 Point, 16 MultiPolygon e 1 LineString. O detalhe por categoria entra no D4. |
 | Após filtro de nome | |
 | Após remoção de duplicados | |
 | Selecionados | 20 (ou todos, se houver menos; registrar a contagem) |
