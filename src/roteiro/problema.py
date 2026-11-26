@@ -111,6 +111,44 @@ class Avaliador:
         """Soma das preferências das categorias dos locais visitados."""
         return float(sum(self.preferencia[o] for o in roteiro))
 
+    def tempo_minimo_min(self, osm_id) -> float:
+        """Menor roteiro possível com este local: ida + DURACAO_VISITA_MIN + volta."""
+        return self.tempo([osm_id])
+
+    def diagnosticar_orcamento(self):
+        """Caso A3: verifica se algum local cabe sozinho no orçamento.
+
+        Devolve None se pelo menos um local cabe. Se nenhum cabe, não há roteiro viável
+        além do vazio, e devolve um dict com o local mais próximo e quanto tempo falta:
+
+            {"osm_id", "nome", "tempo_minimo_min", "orcamento_min", "falta_min", "mensagem"}
+
+        Não conta avaliações: é uma verificação da entrada, feita antes de qualquer método.
+        """
+        if not self.locais:
+            raise EntradaInvalida("Não há locais cadastrados para montar o roteiro.")
+        orcamento = self.cenario.orcamento_min
+        # Empate no tempo mínimo: vale o primeiro na ordem do pois.csv (determinístico).
+        mais_proximo = min(self.locais, key=self.tempo_minimo_min)
+        tempo_minimo = self.tempo_minimo_min(mais_proximo)
+        if tempo_minimo <= orcamento + TOLERANCIA_MIN:
+            return None
+        falta = tempo_minimo - orcamento
+        mensagem = (
+            f"Nenhum local cabe em {orcamento:.0f} min. O mais próximo é "
+            f"{self.nome[mais_proximo]}, que exige {tempo_minimo:.1f} min "
+            f"(ida e volta a {VELOCIDADE_KMH:g} km/h mais {DURACAO_VISITA_MIN:.0f} min de visita). "
+            f"Faltam {falta:.1f} min."
+        )
+        return {
+            "osm_id": mais_proximo,
+            "nome": self.nome[mais_proximo],
+            "tempo_minimo_min": tempo_minimo,
+            "orcamento_min": orcamento,
+            "falta_min": falta,
+            "mensagem": mensagem,
+        }
+
     # --- Função objetivo (conta) ------------------------------------------
     def avaliar(self, roteiro: list):
         """Incrementa o contador e devolve (utilidade, tempo, viavel).
