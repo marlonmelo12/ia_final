@@ -1,14 +1,16 @@
-"""Casos A2 e A3 (tempo recalculado, orçamento insuficiente). Dono: Integrante 2.
+"""Casos A2 e A3 (tempo recalculado, orçamento insuficiente) e o guloso (P6). Dono: Integrante 2.
 
 Os locais fictícios ficam sobre o meridiano 0 e o equador. Nesses casos, a distância de
 haversine é exatamente R * Δângulo, então o tempo esperado pode ser calculado à mão:
 cada 0,01° vale PERNA_MIN minutos a 4 km/h.
 """
 import math
+import random
 
 import pytest
 
 from roteiro.contratos import DURACAO_VISITA_MIN, RAIO_TERRA_KM, EntradaInvalida
+from roteiro.guloso import construir
 from roteiro.problema import Avaliador, Cenario, haversine_km
 
 KM_POR_GRAU = 2 * math.pi * RAIO_TERRA_KM / 360  # ≈ 111,19508 km
@@ -166,3 +168,68 @@ def test_aceita_dataframe_do_pois_csv():
     pd = pytest.importorskip("pandas")
     av = Avaliador(pd.DataFrame(POIS), Cenario(0.0, 0.0, 240.0, PREFS))
     assert av.tempo(["A", "B", "C"]) == pytest.approx(avaliador().tempo(["A", "B", "C"]))
+
+
+# --- P6: construção gulosa ------------------------------------------------
+MUSEUS = {"museum": 5, "attraction": 1, "park": 1}
+PARQUES = {"museum": 1, "attraction": 1, "park": 5}
+
+
+def pois_aleatorios(semente, n=20):
+    """Locais fictícios espalhados ~3 km em volta da Praça do Ferreira."""
+    rng = random.Random(semente)
+    return [
+        {
+            "osm_id": f"P{i}",
+            "nome": f"Local {i}",
+            "categoria": rng.choice(["museum", "attraction", "park"]),
+            "lat": -3.7275 + rng.uniform(-0.03, 0.03),
+            "lon": -38.5275 + rng.uniform(-0.03, 0.03),
+        }
+        for i in range(n)
+    ]
+
+
+def test_guloso_calculado_a_mao_com_empate():
+    # Com 70 min só A ou D cabem (63,36 min cada); empatam, e vale A pela ordem.
+    assert construir(avaliador(orcamento=70.0, prefs=MUSEUS)) == ["A"]
+
+
+def test_guloso_preferencias_alteram_o_roteiro():
+    # Com 135 min: C sozinho custa 130,08 min. Para quem prefere parques,
+    # C (5 / 130,08) vence A (1 / 63,36); para quem prefere museus, A vence e
+    # depois entra o museu D (partida→A→D→partida ≈ 116,9 min). [D, A] e [A, D] têm
+    # o mesmo tempo (é o mesmo trajeto ao contrário), e o empate fica com a posição 0.
+    parques = construir(avaliador(orcamento=135.0, prefs=PARQUES))
+    museus = construir(avaliador(orcamento=135.0, prefs=MUSEUS))
+    assert parques == ["C"]
+    assert museus == ["D", "A"]
+
+
+def test_guloso_orcamento_insuficiente_devolve_vazio():
+    assert construir(avaliador(orcamento=30.0)) == []
+
+
+@pytest.mark.parametrize("orcamento", [120, 180, 240])
+@pytest.mark.parametrize("prefs", [MUSEUS, PARQUES, {"museum": 3, "attraction": 3, "park": 3}])
+def test_guloso_viavel_maximal_e_deterministico(orcamento, prefs):
+    pois = pois_aleatorios(100)
+    av = Avaliador(pois, Cenario(-3.7275, -38.5275, orcamento, prefs))
+    roteiro = construir(av)
+
+    assert roteiro, "algum local deveria caber"
+    assert len(set(roteiro)) == len(roteiro)                 # A1
+    assert av.tempo(roteiro) <= orcamento + 1e-6              # A2
+    # Maximal: nenhum local restante cabe em nenhuma posição.
+    for local in set(av.locais) - set(roteiro):
+        for pos in range(len(roteiro) + 1):
+            assert av.tempo(roteiro[:pos] + [local] + roteiro[pos:]) > orcamento
+    # Determinístico (base do A6).
+    assert construir(Avaliador(pois, Cenario(-3.7275, -38.5275, orcamento, prefs))) == roteiro
+
+
+def test_guloso_conta_as_avaliacoes_no_avaliador():
+    av = avaliador(orcamento=240.0)
+    construir(av)
+    # Passo 1: 4 locais x 1 posição; cada passo seguinte testa mais candidatos.
+    assert av.avaliacoes >= 4
